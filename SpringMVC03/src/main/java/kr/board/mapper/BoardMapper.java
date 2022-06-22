@@ -10,9 +10,11 @@ package kr.board.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import kr.board.domain.Board;
+import kr.board.domain.Member;
 
 public interface BoardMapper {
 	// 1. 데이터베이스 접속 기능(X) -> Spring
@@ -47,4 +49,7 @@ public interface BoardMapper {
 
 	@Update("update board set title=#{title},writer=#{writer} where idx=#{idx}")
 	public void boardTWUpdateAjax(Board vo);
+	
+	@Select("select * from member where memId=#{memId} and memPass=#{memPass}")
+	public Member login(Member vo);
 }

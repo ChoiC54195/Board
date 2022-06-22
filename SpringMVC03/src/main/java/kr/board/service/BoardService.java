@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import kr.board.domain.Board;
+import kr.board.domain.Member;
 import kr.board.mapper.BoardMapper;
 
 @Service
@@ -41,5 +42,9 @@ public class BoardService {
 
 	public void boardTWUpdateAjax(Board vo) {
 		mapper.boardTWUpdateAjax(vo);
+	}
+	
+	public Member login(Member vo) {
+		return mapper.login(vo);	
 	}
 }

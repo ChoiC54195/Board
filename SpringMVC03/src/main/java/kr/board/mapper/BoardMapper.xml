@@ -8,9 +8,9 @@
 		idx desc
 	</select>
 	<insert id="boardInsert" parameterType="kr.board.domain.Board">
-		insert into board(title,
+		insert into board(memId,title,
 		contents, writer)
-		value(#{title},#{contents},#{writer})
+		value(#{memId},#{title},#{contents},#{writer})
 	</insert>
 	<select id="boardContent" 
 		resultType="kr.board.domain.Board"

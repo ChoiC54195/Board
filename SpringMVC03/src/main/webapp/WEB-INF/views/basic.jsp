@@ -93,13 +93,13 @@
 							blist += "</tr>";
 
 						});
-
-		blist += "<tr>";
-		blist += "<td colspan='7'>";
-		blist += "<button class='btn btn-primary btn-sm' onclick='goForm()'>글쓰기</button>";
-		blist += "</td>";
-		blist += "</tr>";
-
+		if(${!empty mvo}){
+			blist += "<tr>";
+			blist += "<td colspan='7'>";
+			blist += "<button class='btn btn-primary btn-sm' onclick='goForm()'>글쓰기</button>";
+			blist += "</td>";
+			blist += "</tr>";
+		}
 		blist += "</table>";
 
 		$(".blist").html(blist);
@@ -191,25 +191,36 @@
 </head>
 <body>
 	<div class="container">
-		<h2>Spring WEB MVC02(JQuery+Ajax+JSON)</h2>
+		<h2>Spring WEB MVC03(+회원인증)</h2>
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<form class="form-inline" action="/action_page.php">
-					<div class="form-group">
-						<label for="memeId">아이디</label> <input type="text"
-							class="form-control" name="memId" id="memId">
-					</div>
-					<div class="form-group">
-						<label for="memPass">패스워드</label> <input type="password"
-							class="form-control" name="memPass" id="memPass">
-					</div>
-					<button type="submit" class="btn btn-default">로그인</button>
-				</form>
+				<c:if test="${empty mvo}">
+					<form class="form-inline" action="${cpath}/login.do" method="post">
+						<div class="form-group">
+							<label for="memeId">아이디</label> <input type="text"
+								class="form-control" name="memId" id="memId">
+						</div>
+						<div class="form-group">
+							<label for="memPass">패스워드</label> <input type="password"
+								class="form-control" name="memPass" id="memPass">
+						</div>
+						<button type="submit" class="btn btn-default">로그인</button>
+					</form>
+				</c:if>
+				<c:if test="${!empty mvo}">
+					<form action="${cpath}/logout.do" method="post">
+						<div class="form-group">
+							<label>${mvo.memName}님 방문을 환영합니다.</label>
+							<button class="btn btn-info btn-sm">로그아웃</button>
+						</div>
+					</form>
+				</c:if>
 			</div>
 			<div class="panel-body blist">Panel Content</div>
 			<div class="panel-body rform" style="display: none">
 				<!-- 글쓰기 화면 -->
 				<form id="frm" class="form-horizontal" method="post">
+					<input type="hidden" name="memId" value="${mvo.memId}">
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="title">제목:</label>
 						<div class="col-sm-10">
@@ -228,7 +239,7 @@
 						<label class="control-label col-sm-2" for="writer">작성자:</label>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="writer" name="writer"
-								placeholder="Enter writer">
+								placeholder="Enter writer" value="${mvo.memName}" readonly="readonly">
 						</div>
 					</div>
 					<div class="form-group">
