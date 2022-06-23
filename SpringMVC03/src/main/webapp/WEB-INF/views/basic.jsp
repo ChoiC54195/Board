@@ -62,37 +62,48 @@
 		blist += "<td>수정</td>";
 		blist += "<td>삭제</td>";
 		blist += "</tr>";
-		$
-				.each(
-						data,
-						function(index, obj) {
-							blist += "<tr>";
-							blist += "<td>" + obj.idx + "</td>";
-							blist += "<td id='t"+obj.idx+"'><a href='javascript:goContent("
+		$.each(
+				data,
+				function(index, obj) {
+				blist += "<tr>";
+				blist += "<td>" + obj.idx + "</td>";
+				blist += "<td id='t"+obj.idx+"'><a href='javascript:goContent("
 									+ obj.idx + ")'>" + obj.title + "</a></td>";
-							blist += "<td id='w"+obj.idx+"'>" + obj.writer
+				blist += "<td id='w"+obj.idx+"'>" + obj.writer
 									+ "</td>";
-							blist += "<td>" + obj.indate + "</td>";
-							blist += "<td>" + obj.count + "</td>";
-							blist += "<td id='u"+obj.idx+"'><button class='btn btn-info btn-sm' onclick='goUpdate("
-									+ obj.idx + ")'>수정</button></td>";
-							blist += "<td><button class='btn btn-warning btn-sm' onclick='goDelete("
-									+ obj.idx + ")'>삭제</button></td>";
-							blist += "</tr>";
-							blist += "<tr id='cv"+obj.idx+"' style='display:none'>";
-							blist += "<td>내용</td>";
-							blist += "<td colspan='6'><textarea rows='7'id='c"+obj.idx+"' class='form-control'>"
+				blist += "<td>" + obj.indate + "</td>";
+				blist += "<td id='count"+obj.idx+"'>" + obj.count + "</td>";
+				if(${!empty mvo}){//로그인했을 때
+					if("${mvo.memId}"==obj.memId){// 자기 게시글일 때
+						blist += "<td id='u"+obj.idx+"'><button class='btn btn-info btn-sm' onclick='goUpdate("+ obj.idx + ")'>수정</button></td>";
+						blist += "<td><button class='btn btn-warning btn-sm' onclick='goDelete("+ obj.idx + ")'>삭제</button></td>";
+					}else{
+					// 본인 게시글이 아닐 때
+						blist += "<td id='u"+obj.idx+"'><button disabled class='btn btn-info btn-sm' onclick='goUpdate("+ obj.idx + ")'>수정</button></td>";
+						blist += "<td><button disabled class='btn btn-warning btn-sm' onclick='goDelete("+ obj.idx + ")'>삭제</button></td>";
+					}
+				}else{
+					blist += "<td id='u"+obj.idx+"'><button disabled class='btn btn-info btn-sm' onclick='goUpdate("+ obj.idx + ")'>수정</button></td>";
+					blist += "<td><button disabled class='btn btn-warning btn-sm' onclick='goDelete("+ obj.idx + ")'>삭제</button></td>";
+				}
+				blist += "</tr>";
+				blist += "<tr id='cv"+obj.idx+"' style='display:none'>";
+				blist += "<td>내용</td>";
+				blist += "<td colspan='6'><textarea rows='7'id='c"+obj.idx+"' class='form-control'>"
 									+ obj.contents + "</textarea>";
-							blist += "<br/>";
-							blist += "<button class='btn btn-info btn-sm' onclick='upClick("
-									+ obj.idx + ")'>수정</button>";
-							blist += "&nbsp;<button class='btn btn-warning btn-sm'>취소</button>";
-							blist += "&nbsp;<button class='btn btn-danger btn-sm' onclick='goClose("
+				blist += "<br/>";
+				if("${mvo.memId}"==obj.memId){
+					blist += "<button class='btn btn-info btn-sm' onclick='upClick("+ obj.idx + ")'>수정</button>";
+				}else{
+					blist += "<button disabled class='btn btn-info btn-sm' onclick='upClick("+ obj.idx + ")'>수정</button>";
+				}
+				blist += "&nbsp;<button class='btn btn-warning btn-sm'>취소</button>";
+				blist += "&nbsp;<button class='btn btn-danger btn-sm' onclick='goClose("
 									+ obj.idx + ")'>닫기</button>";
-							blist += "</td>";
-							blist += "</tr>";
+				blist += "</td>";
+				blist += "</tr>";
 
-						});
+				});
 		if(${!empty mvo}){
 			blist += "<tr>";
 			blist += "<td colspan='7'>";
@@ -186,6 +197,21 @@
 		} else {
 			$("#cv" + idx).css("display", "none");
 		}
+		//조회수 누적
+		if($("#cv"+idx).css("display")!="block"){
+			$.ajax({
+				url : "${cpath}/boardCountAjax.do",
+				type : "get",
+				data : {"idx":idx},
+				dataType: "json",
+				success : function(data){
+					$("#count"+idx).text(data.count);
+				},
+				error : function(){
+					alert("조회수 누적 실패");
+				}
+			});	
+		}
 	}
 </script>
 </head>
@@ -239,7 +265,8 @@
 						<label class="control-label col-sm-2" for="writer">작성자:</label>
 						<div class="col-sm-10">
 							<input type="text" class="form-control" id="writer" name="writer"
-								placeholder="Enter writer" value="${mvo.memName}" readonly="readonly">
+								placeholder="Enter writer" value="${mvo.memName}"
+								readonly="readonly">
 						</div>
 					</div>
 					<div class="form-group">

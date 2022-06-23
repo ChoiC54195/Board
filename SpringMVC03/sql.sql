@@ -25,3 +25,5 @@ create table board(
 	count int default 0,
 	primary key(idx)
 );
+
+create table member()

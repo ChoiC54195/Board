@@ -47,4 +47,10 @@ public class BoardService {
 	public Member login(Member vo) {
 		return mapper.login(vo);	
 	}
+
+	public Board boardCountAjax(int idx) {
+		mapper.boardCountAjax(idx);//조회수 업데이트
+		Board vo = mapper.boardContent(idx);
+		return vo;
+	}
 }
